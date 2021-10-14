@@ -2,9 +2,12 @@ import { useNetwork, useContractUtils } from '../hooks';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { ChargedParticles__factory } from './types/contracts/factories/ChargedParticles__factory';
 
-export default function useGenericBasketManagerContract(signer: any) {
-    const { chargedParticlesAddress, protonAddress } = useNetwork('mumbai');
-    const { approveProton, approveERC20 } = useContractUtils(signer);
+export default function useChargedParticlesContract(
+    signer: any,
+    network: string,
+) {
+    const { chargedParticlesAddress, protonAddress } = useNetwork(network);
+    const { approveProton, approveERC20 } = useContractUtils(signer, network);
 
     const chargedParticlesContract = ChargedParticles__factory.connect(
         chargedParticlesAddress,

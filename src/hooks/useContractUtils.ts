@@ -3,8 +3,8 @@ import { BigNumberish } from '@ethersproject/bignumber';
 import { Proton__factory } from './types/contracts/factories/Proton__factory';
 import { ERC20__factory } from './types/contracts/factories/ERC20__factory';
 
-export default function useContractUtils(signer: any) {
-    const { protonAddress } = useNetwork('mumbai');
+export default function useContractUtils(signer: any, network: string) {
+    const { protonAddress } = useNetwork(network);
     const protonContract = Proton__factory.connect(protonAddress, signer);
 
     const getApprovedProton: typeof protonContract.getApproved = async (

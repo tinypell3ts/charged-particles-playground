@@ -10,12 +10,17 @@ import { useChargedParticlesContract, useNetwork } from './hooks';
 import './App.css';
 
 function App() {
+    // CONSTANTS
+    const MY_TOKEN_ID = '97';
+    const ERC20_TOKEN_ADDRESS = '0x29c9eccef9f8a58882e726ea37b27bf8d6c5173f';
+    const NETWORK = 'mumbai';
+
     const provider = new ethers.providers.Web3Provider(
         (window as any).ethereum,
     );
     const signer = provider.getSigner();
 
-    const { chargedParticlesAddress, protonAddress } = useNetwork('mumbai');
+    const { chargedParticlesAddress, protonAddress } = useNetwork(NETWORK);
     const {
         baseParticleMass,
         breakCovalentBond,
@@ -25,11 +30,7 @@ function App() {
         energizeParticle,
         releaseParticle,
         releaseParticleAmount,
-    } = useChargedParticlesContract(signer);
-
-    // CONSTANTS
-    const MY_TOKEN_ID = '97';
-    const ERC20_TOKEN_ADDRESS = '0x29c9eccef9f8a58882e726ea37b27bf8d6c5173f';
+    } = useChargedParticlesContract(signer, NETWORK);
 
     const {
         address,
