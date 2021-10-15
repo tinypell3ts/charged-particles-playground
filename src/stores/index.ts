@@ -1,3 +1,4 @@
+import useTransactionStore from './transaction';
 import useWalletStore from './wallet';
 
-export { useWalletStore };
+export { useTransactionStore, useWalletStore };
