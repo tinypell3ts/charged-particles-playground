@@ -10,7 +10,7 @@
 
 ## Built With
 * [Charged Particles](http://charged.fi/)
-* [Next.js](https://nextjs.org/)
+* [React](https://reactjs.org/)
 * [Zustand](https://github.com/pmndrs/zustand)
 * [OnboardJS](https://docs.blocknative.com/onboard)
 
