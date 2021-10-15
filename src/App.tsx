@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
 import Header from './components/Header';
@@ -42,6 +42,13 @@ function App() {
         setOnboard,
     } = useWalletStore();
 
+    const [energizeParticleValue, setEnergizeParticleValue] =
+        useState<string>('');
+    const [releaseParticleValue, setReleaseParticleValue] =
+        useState<string>('');
+    const [txHash, setTxHash] = useState<string>();
+    const [txValue, setTxValue] = useState<string>();
+
     useEffect(() => {
         const onboard = initOnboard({
             address: setAddress,
@@ -84,6 +91,7 @@ function App() {
                 'generic',
             );
             console.log(tx);
+            setTxValue(ethers.utils.formatUnits(tx, 0));
         } catch (e) {
             console.log(e);
         }
@@ -99,6 +107,7 @@ function App() {
 
             const receipt = await tx.wait();
             console.log(receipt);
+            setTxHash(receipt.transactionHash);
         } catch (e) {
             console.log(e);
         }
@@ -112,7 +121,9 @@ function App() {
                 protonAddress,
                 87,
             );
-            console.log(tx);
+            const receipt = await tx.wait();
+            console.log(receipt);
+            setTxHash(receipt.transactionHash);
         } catch (e) {
             console.log(e);
         }
@@ -127,7 +138,9 @@ function App() {
                 protonAddress,
                 87,
             );
-            console.log(tx);
+            const receipt = await tx.wait();
+            console.log(receipt);
+            setTxHash(receipt.transactionHash);
         } catch (e) {
             console.log(e);
         }
@@ -140,44 +153,55 @@ function App() {
                 'generic',
                 ERC20_TOKEN_ADDRESS,
             );
-            console.log(tx);
+
+            const receipt = await tx.wait();
+            console.log(receipt);
+            setTxHash(receipt.transactionHash);
         } catch (e) {
             console.log({ e });
         }
     }
 
     async function handleEnergizeParticle() {
+        if (!energizeParticleValue) return;
         try {
             const tx = await energizeParticle(
                 address,
                 MY_TOKEN_ID,
                 'generic',
                 ERC20_TOKEN_ADDRESS,
-                ethers.utils.parseEther('5').toString(),
+                ethers.utils
+                    .parseEther(energizeParticleValue.trim())
+                    .toString(),
                 address,
             );
 
             const receipt = await tx.wait();
 
             console.log(receipt);
+            setTxHash(receipt.transactionHash);
+            setEnergizeParticleValue('');
         } catch (e) {
             console.log({ e });
         }
     }
 
     async function handleReleaseParticleAmount() {
+        if (!releaseParticleValue) return;
         try {
             const tx = await releaseParticleAmount(
                 address,
                 MY_TOKEN_ID,
                 'generic',
                 ERC20_TOKEN_ADDRESS,
-                ethers.utils.parseEther('2').toString(),
+                ethers.utils.parseEther(releaseParticleValue.trim()).toString(),
             );
 
             const receipt = await tx.wait();
 
             console.log(receipt);
+            setTxHash(receipt.transactionHash);
+            setReleaseParticleValue('');
         } catch (e) {
             console.log({ e });
         }
@@ -194,6 +218,7 @@ function App() {
             const receipt = await tx.wait();
 
             console.log(receipt);
+            setTxHash(receipt.transactionHash);
         } catch (e) {
             console.log({ e });
         }
@@ -213,11 +238,47 @@ function App() {
             <button onClick={handleBreakCovalentBonds}>
                 BreakCovalentBonds
             </button>
-            <button onClick={handleEnergizeParticle}>EnergizeParticle</button>
-            <button onClick={handleReleaseParticleAmount}>
-                ReleaseParticleAmount
-            </button>
+            <div className="Section">
+                <input
+                    placeholder="enter amount in ether..."
+                    value={energizeParticleValue}
+                    onChange={(e) => setEnergizeParticleValue(e.target.value)}
+                />
+                <button
+                    onClick={handleEnergizeParticle}
+                    disabled={!energizeParticleValue}
+                >
+                    EnergizeParticle
+                </button>
+            </div>
+            <div className="Section">
+                <input
+                    placeholder="enter amount in ether..."
+                    value={releaseParticleValue}
+                    onChange={(e) => setReleaseParticleValue(e.target.value)}
+                />
+                <button
+                    onClick={handleReleaseParticleAmount}
+                    disabled={!releaseParticleValue}
+                >
+                    ReleaseParticleAmount
+                </button>
+            </div>
             <button onClick={handleReleaseParticle}>ReleaseParticle</button>
+            <div>
+                {txHash && (
+                    <>
+                        <span>Success! - </span>
+                        <a
+                            target="_blank"
+                            href={`https://mumbai.polygonscan.com/tx/${txHash}`}
+                        >
+                            See Transaction
+                        </a>
+                    </>
+                )}
+            </div>
+            <div>{txValue && <p>value: {JSON.stringify(txValue)}</p>}</div>
         </div>
     );
 }
