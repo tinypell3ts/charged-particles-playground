@@ -7,13 +7,18 @@ import { initOnboard } from './services/onboard';
 import { useWalletStore } from './stores';
 import { useChargedParticlesContract, useNetwork, useProton } from './hooks';
 
+import {
+    ERC20_TOKEN_ADDRESS,
+    NETWORK,
+    PROTON_TOKEN_ID_1,
+    PROTON_TOKEN_ID_2,
+    WALLET_MANAGER_ID,
+} from './constants';
+
 import './App.css';
 
 function App() {
     // CONSTANTS
-    const MY_TOKEN_ID = '97';
-    const ERC20_TOKEN_ADDRESS = '0x29c9eccef9f8a58882e726ea37b27bf8d6c5173f';
-    const NETWORK = 'mumbai';
 
     const provider = new ethers.providers.Web3Provider(
         (window as any).ethereum,
@@ -93,8 +98,8 @@ function App() {
         try {
             const tx = await currentParticleCovalentBonds(
                 chargedParticlesAddress,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
             );
             console.log(tx);
             setTxValue(ethers.utils.formatUnits(tx, 0));
@@ -117,8 +122,8 @@ function App() {
         try {
             const tx = await currentParticleCharge(
                 chargedParticlesAddress,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
                 ERC20_TOKEN_ADDRESS,
             );
 
@@ -133,10 +138,10 @@ function App() {
         try {
             const tx = await covalentBond(
                 protonAddress,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
                 protonAddress,
-                87,
+                PROTON_TOKEN_ID_2,
             );
             const receipt = await tx.wait();
             console.log(receipt);
@@ -150,10 +155,10 @@ function App() {
             const tx = await breakCovalentBond(
                 address,
                 protonAddress,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
                 protonAddress,
-                87,
+                PROTON_TOKEN_ID_2,
             );
             const receipt = await tx.wait();
             console.log(receipt);
@@ -166,8 +171,8 @@ function App() {
         try {
             const tx = await baseParticleMass(
                 protonAddress,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
                 ERC20_TOKEN_ADDRESS,
             );
 
@@ -184,8 +189,8 @@ function App() {
         try {
             const tx = await energizeParticle(
                 address,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
                 ERC20_TOKEN_ADDRESS,
                 ethers.utils
                     .parseEther(energizeParticleValue.trim())
@@ -208,8 +213,8 @@ function App() {
         try {
             const tx = await releaseParticleAmount(
                 address,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
                 ERC20_TOKEN_ADDRESS,
                 ethers.utils.parseEther(releaseParticleValue.trim()).toString(),
             );
@@ -227,8 +232,8 @@ function App() {
         try {
             const tx = await releaseParticle(
                 address,
-                MY_TOKEN_ID,
-                'generic',
+                PROTON_TOKEN_ID_1,
+                WALLET_MANAGER_ID,
                 ERC20_TOKEN_ADDRESS,
             );
 
