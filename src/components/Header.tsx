@@ -20,7 +20,7 @@ export default function Header() {
     return (
         <header>
             {address ? (
-                <div className="Wallet">
+                <div className="wallet">
                     <span>{address}</span>
                     <button onClick={handleReset}>Disconnect</button>
                 </div>

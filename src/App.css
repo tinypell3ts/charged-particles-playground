@@ -1,18 +1,20 @@
-.App {
+.app {
+    padding: 0rem 5rem;
+}
+.section {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 1rem;
-    padding: 5rem;
     justify-content: center;
     align-items: center;
 }
 
-.Wallet {
-    display: flex;
-    justify-content: space-between;
-}
-
-.Section {
+.section__wrapper {
     display: grid;
     grid-template-rows: repeat(1, 1fr);
+}
+
+.wallet {
+    display: flex;
+    justify-content: space-between;
 }

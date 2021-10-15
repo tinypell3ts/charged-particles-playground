@@ -5,7 +5,7 @@ import Header from './components/Header';
 
 import { initOnboard } from './services/onboard';
 import { useWalletStore } from './stores';
-import { useChargedParticlesContract, useNetwork } from './hooks';
+import { useChargedParticlesContract, useNetwork, useProton } from './hooks';
 
 import './App.css';
 
@@ -32,6 +32,11 @@ function App() {
         releaseParticleAmount,
     } = useChargedParticlesContract(signer, NETWORK);
 
+    const { createBasicProton, createProton, creatorOf } = useProton(
+        signer,
+        NETWORK,
+    );
+
     const {
         address,
         onboard,
@@ -46,6 +51,7 @@ function App() {
         useState<string>('');
     const [releaseParticleValue, setReleaseParticleValue] =
         useState<string>('');
+    const [creatorOfValue, setCreatorOfValue] = useState<string>('');
     const [txHash, setTxHash] = useState<string>();
     const [txValue, setTxValue] = useState<string>();
 
@@ -96,6 +102,17 @@ function App() {
             console.log(e);
         }
     }
+
+    async function handleCreatorOf() {
+        try {
+            const tx = await creatorOf(creatorOfValue);
+            console.log(tx);
+            setTxValue(tx);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     async function handleCurrentParticleCharge() {
         try {
             const tx = await currentParticleCharge(
@@ -225,46 +242,66 @@ function App() {
     }
 
     return (
-        <div className="App">
+        <div className="app">
             <Header />
-            <button onClick={handleCurrentParticleCovalentBonds}>
-                CurrentParticleCovalentBonds
-            </button>
-            <button onClick={handleCurrentParticleCharge}>
-                CurrentParticleCharge
-            </button>
-            <button onClick={handleBaseParticlePass}>BaseParticleMass</button>
-            <button onClick={handleCovalentBonds}>CovalentBonds</button>
-            <button onClick={handleBreakCovalentBonds}>
-                BreakCovalentBonds
-            </button>
-            <div className="Section">
-                <input
-                    placeholder="enter amount in ether..."
-                    value={energizeParticleValue}
-                    onChange={(e) => setEnergizeParticleValue(e.target.value)}
-                />
-                <button
-                    onClick={handleEnergizeParticle}
-                    disabled={!energizeParticleValue}
-                >
-                    EnergizeParticle
+            <div className="section">
+                <h1>Charged Particles Contract</h1>
+                <button onClick={handleCurrentParticleCovalentBonds}>
+                    CurrentParticleCovalentBonds
                 </button>
-            </div>
-            <div className="Section">
-                <input
-                    placeholder="enter amount in ether..."
-                    value={releaseParticleValue}
-                    onChange={(e) => setReleaseParticleValue(e.target.value)}
-                />
-                <button
-                    onClick={handleReleaseParticleAmount}
-                    disabled={!releaseParticleValue}
-                >
-                    ReleaseParticleAmount
+                <button onClick={handleCurrentParticleCharge}>
+                    CurrentParticleCharge
                 </button>
+                <button onClick={handleBaseParticlePass}>
+                    BaseParticleMass
+                </button>
+                <button onClick={handleCovalentBonds}>CovalentBonds</button>
+                <button onClick={handleBreakCovalentBonds}>
+                    BreakCovalentBonds
+                </button>
+                <div className="section__wrapper">
+                    <input
+                        placeholder="enter amount in ether..."
+                        value={energizeParticleValue}
+                        onChange={(e) =>
+                            setEnergizeParticleValue(e.target.value)
+                        }
+                    />
+                    <button
+                        onClick={handleEnergizeParticle}
+                        disabled={!energizeParticleValue}
+                    >
+                        EnergizeParticle
+                    </button>
+                </div>
+                <div className="section__wrapper">
+                    <input
+                        placeholder="enter amount in ether..."
+                        value={releaseParticleValue}
+                        onChange={(e) =>
+                            setReleaseParticleValue(e.target.value)
+                        }
+                    />
+                    <button
+                        onClick={handleReleaseParticleAmount}
+                        disabled={!releaseParticleValue}
+                    >
+                        ReleaseParticleAmount
+                    </button>
+                </div>
+                <button onClick={handleReleaseParticle}>ReleaseParticle</button>
             </div>
-            <button onClick={handleReleaseParticle}>ReleaseParticle</button>
+            <div className="section">
+                <h1>Proton Contract</h1>
+                <div className="section__wrapper">
+                    <input
+                        placeholder="enter tokenID..."
+                        value={creatorOfValue}
+                        onChange={(e) => setCreatorOfValue(e.target.value)}
+                    />
+                    <button onClick={handleCreatorOf}>creatorOf</button>
+                </div>
+            </div>
             <div>
                 {txHash && (
                     <>
