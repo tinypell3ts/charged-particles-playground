@@ -1,7 +1,7 @@
 import Onboard from 'bnc-onboard';
 
-const networkId = 80001;
-const networkName = 'Mumbai';
+const networkId = parseInt(process.env.NETWORK_ID || '80001', 10);
+const networkName = process.env.NETWORK_NAME || 'mumbai';
 const dappId = process.env.ONBOARD_JS_API_KEY;
 
 export function initOnboard(subscriptions: any) {
