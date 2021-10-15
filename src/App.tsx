@@ -1,24 +1,27 @@
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
-import Header from './components/Header';
+import {
+    BaseParticleMass,
+    BreakCovalentBond,
+    CovalentBond,
+    CreatorOf,
+    CurrentParticleCharge,
+    CurrentParticleCovalentBonds,
+    EnergizeParticle,
+    Header,
+    ReleaseParticle,
+    ReleaseParticleAmount,
+} from './components';
 
 import { initOnboard } from './services/onboard';
-import { useWalletStore } from './stores';
+import { useWalletStore, useTransactionStore } from './stores';
 import { useChargedParticlesContract, useNetwork, useProton } from './hooks';
-
-import {
-    ERC20_TOKEN_ADDRESS,
-    NETWORK,
-    PROTON_TOKEN_ID_1,
-    PROTON_TOKEN_ID_2,
-    WALLET_MANAGER_ID,
-} from './constants';
 
 import './App.css';
 
 function App() {
-    // CONSTANTS
+    const NETWORK = process.env.NETWORK_NAME || 'mumbai';
 
     const provider = new ethers.providers.Web3Provider(
         (window as any).ethereum,
@@ -37,13 +40,9 @@ function App() {
         releaseParticleAmount,
     } = useChargedParticlesContract(signer, NETWORK);
 
-    const { createBasicProton, createProton, creatorOf } = useProton(
-        signer,
-        NETWORK,
-    );
+    const { creatorOf } = useProton(signer, NETWORK);
 
     const {
-        address,
         onboard,
         setAddress,
         setNetwork,
@@ -52,13 +51,7 @@ function App() {
         setOnboard,
     } = useWalletStore();
 
-    const [energizeParticleValue, setEnergizeParticleValue] =
-        useState<string>('');
-    const [releaseParticleValue, setReleaseParticleValue] =
-        useState<string>('');
-    const [creatorOfValue, setCreatorOfValue] = useState<string>('');
-    const [txHash, setTxHash] = useState<string>();
-    const [txValue, setTxValue] = useState<string>();
+    const { txHash, txValue } = useTransactionStore();
 
     useEffect(() => {
         const onboard = initOnboard({
@@ -94,217 +87,48 @@ function App() {
         }
     }
 
-    async function handleCurrentParticleCovalentBonds() {
-        try {
-            const tx = await currentParticleCovalentBonds(
-                chargedParticlesAddress,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-            );
-            console.log(tx);
-            setTxValue(ethers.utils.formatUnits(tx, 0));
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async function handleCreatorOf() {
-        try {
-            const tx = await creatorOf(creatorOfValue);
-            console.log(tx);
-            setTxValue(tx);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async function handleCurrentParticleCharge() {
-        try {
-            const tx = await currentParticleCharge(
-                chargedParticlesAddress,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-                ERC20_TOKEN_ADDRESS,
-            );
-
-            const receipt = await tx.wait();
-            console.log(receipt);
-            setTxHash(receipt.transactionHash);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    async function handleCovalentBonds() {
-        try {
-            const tx = await covalentBond(
-                protonAddress,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-                protonAddress,
-                PROTON_TOKEN_ID_2,
-            );
-            const receipt = await tx.wait();
-            console.log(receipt);
-            setTxHash(receipt.transactionHash);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    async function handleBreakCovalentBonds() {
-        try {
-            const tx = await breakCovalentBond(
-                address,
-                protonAddress,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-                protonAddress,
-                PROTON_TOKEN_ID_2,
-            );
-            const receipt = await tx.wait();
-            console.log(receipt);
-            setTxHash(receipt.transactionHash);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    async function handleBaseParticlePass() {
-        try {
-            const tx = await baseParticleMass(
-                protonAddress,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-                ERC20_TOKEN_ADDRESS,
-            );
-
-            const receipt = await tx.wait();
-            console.log(receipt);
-            setTxHash(receipt.transactionHash);
-        } catch (e) {
-            console.log({ e });
-        }
-    }
-
-    async function handleEnergizeParticle() {
-        if (!energizeParticleValue) return;
-        try {
-            const tx = await energizeParticle(
-                address,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-                ERC20_TOKEN_ADDRESS,
-                ethers.utils
-                    .parseEther(energizeParticleValue.trim())
-                    .toString(),
-                address,
-            );
-
-            const receipt = await tx.wait();
-
-            console.log(receipt);
-            setTxHash(receipt.transactionHash);
-            setEnergizeParticleValue('');
-        } catch (e) {
-            console.log({ e });
-        }
-    }
-
-    async function handleReleaseParticleAmount() {
-        if (!releaseParticleValue) return;
-        try {
-            const tx = await releaseParticleAmount(
-                address,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-                ERC20_TOKEN_ADDRESS,
-                ethers.utils.parseEther(releaseParticleValue.trim()).toString(),
-            );
-
-            const receipt = await tx.wait();
-
-            console.log(receipt);
-            setTxHash(receipt.transactionHash);
-            setReleaseParticleValue('');
-        } catch (e) {
-            console.log({ e });
-        }
-    }
-    async function handleReleaseParticle() {
-        try {
-            const tx = await releaseParticle(
-                address,
-                PROTON_TOKEN_ID_1,
-                WALLET_MANAGER_ID,
-                ERC20_TOKEN_ADDRESS,
-            );
-
-            const receipt = await tx.wait();
-
-            console.log(receipt);
-            setTxHash(receipt.transactionHash);
-        } catch (e) {
-            console.log({ e });
-        }
-    }
-
     return (
         <div className="app">
             <Header />
             <div className="section">
                 <h1>Charged Particles Contract</h1>
-                <button onClick={handleCurrentParticleCovalentBonds}>
-                    CurrentParticleCovalentBonds
-                </button>
-                <button onClick={handleCurrentParticleCharge}>
-                    CurrentParticleCharge
-                </button>
-                <button onClick={handleBaseParticlePass}>
-                    BaseParticleMass
-                </button>
-                <button onClick={handleCovalentBonds}>CovalentBonds</button>
-                <button onClick={handleBreakCovalentBonds}>
-                    BreakCovalentBonds
-                </button>
-                <div className="section__wrapper">
-                    <input
-                        placeholder="enter amount in ether..."
-                        value={energizeParticleValue}
-                        onChange={(e) =>
-                            setEnergizeParticleValue(e.target.value)
-                        }
-                    />
-                    <button
-                        onClick={handleEnergizeParticle}
-                        disabled={!energizeParticleValue}
-                    >
-                        EnergizeParticle
-                    </button>
-                </div>
-                <div className="section__wrapper">
-                    <input
-                        placeholder="enter amount in ether..."
-                        value={releaseParticleValue}
-                        onChange={(e) =>
-                            setReleaseParticleValue(e.target.value)
-                        }
-                    />
-                    <button
-                        onClick={handleReleaseParticleAmount}
-                        disabled={!releaseParticleValue}
-                    >
-                        ReleaseParticleAmount
-                    </button>
-                </div>
-                <button onClick={handleReleaseParticle}>ReleaseParticle</button>
+                <BaseParticleMass
+                    protonAddress={protonAddress}
+                    baseParticleMass={baseParticleMass}
+                />
+                <BreakCovalentBond
+                    protonAddress={protonAddress}
+                    breakCovalentBond={breakCovalentBond}
+                />
+                <CovalentBond
+                    protonAddress={protonAddress}
+                    covalentBond={covalentBond}
+                />
+                <CurrentParticleCharge
+                    chargedParticlesAddress={chargedParticlesAddress}
+                    currentParticleCharge={currentParticleCharge}
+                />
+                <CurrentParticleCharge
+                    chargedParticlesAddress={chargedParticlesAddress}
+                    currentParticleCharge={currentParticleCharge}
+                />
+                <CurrentParticleCovalentBonds
+                    chargedParticlesAddress={chargedParticlesAddress}
+                    currentParticleCovalentBonds={currentParticleCovalentBonds}
+                />
+                <EnergizeParticle
+                    protonAddress={protonAddress}
+                    energizeParticle={energizeParticle}
+                />
+                <ReleaseParticle releaseParticle={releaseParticle} />
+                <ReleaseParticleAmount
+                    releaseParticleAmount={releaseParticleAmount}
+                />
             </div>
             <div className="section">
                 <h1>Proton Contract</h1>
                 <div className="section__wrapper">
-                    <input
-                        placeholder="enter tokenID..."
-                        value={creatorOfValue}
-                        onChange={(e) => setCreatorOfValue(e.target.value)}
-                    />
-                    <button onClick={handleCreatorOf}>creatorOf</button>
+                    <CreatorOf creatorOf={creatorOf} />
                 </div>
             </div>
             <div>
@@ -320,7 +144,7 @@ function App() {
                     </>
                 )}
             </div>
-            <div>{txValue && <p>value: {JSON.stringify(txValue)}</p>}</div>
+            {txValue && <p>value: {JSON.stringify(txValue)}</p>}
         </div>
     );
 }

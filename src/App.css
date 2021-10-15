@@ -1,5 +1,6 @@
 .app {
-    padding: 0rem 5rem;
+    margin: auto;
+    width: 50%;
 }
 .section {
     display: grid;
@@ -12,6 +13,7 @@
 .section__wrapper {
     display: grid;
     grid-template-rows: repeat(1, 1fr);
+    margin: 1rem 0;
 }
 
 .wallet {
