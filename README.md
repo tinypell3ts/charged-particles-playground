@@ -1,7 +1,7 @@
 <br />
 <div align="center">
-  <p style="font-size: 50px">🎡</p>
-<h3 style="font-size: 25px" align="center"><b>Charged Particles Playground</b></h3>
+  <p style="font-size: 150px">🎡</p>
+<h3 style="font-size: 50px" align="center"><b>Charged Particles Playground</b></h3>
 
   <p align="center">
     A simple and fun way to play with the Charged Particles protocol.
