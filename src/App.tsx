@@ -5,6 +5,7 @@ import {
     BaseParticleMass,
     BreakCovalentBond,
     CovalentBond,
+    CreateBasicProton,
     CreatorOf,
     CurrentParticleCharge,
     CurrentParticleCovalentBonds,
@@ -40,7 +41,7 @@ function App() {
         releaseParticleAmount,
     } = useChargedParticlesContract(signer, NETWORK);
 
-    const { creatorOf } = useProton(signer, NETWORK);
+    const { createBasicProton, creatorOf } = useProton(signer, NETWORK);
 
     const {
         onboard,
@@ -90,6 +91,27 @@ function App() {
     return (
         <div className="app">
             <Header />
+            <div>
+                {txHash && (
+                    <>
+                        <span>Success! - </span>
+                        <a
+                            target="_blank"
+                            href={`https://mumbai.polygonscan.com/tx/${txHash}`}
+                        >
+                            See Transaction
+                        </a>
+                    </>
+                )}
+            </div>
+            {txValue && <p>value: {JSON.stringify(txValue)}</p>}
+            <div className="section">
+                <h1>Proton Contract</h1>
+                <div className="section__wrapper">
+                    <CreatorOf creatorOf={creatorOf} />
+                    <CreateBasicProton createBasicProton={createBasicProton} />
+                </div>
+            </div>
             <div className="section">
                 <h1>Charged Particles Contract</h1>
                 <BaseParticleMass
@@ -125,26 +147,6 @@ function App() {
                     releaseParticleAmount={releaseParticleAmount}
                 />
             </div>
-            <div className="section">
-                <h1>Proton Contract</h1>
-                <div className="section__wrapper">
-                    <CreatorOf creatorOf={creatorOf} />
-                </div>
-            </div>
-            <div>
-                {txHash && (
-                    <>
-                        <span>Success! - </span>
-                        <a
-                            target="_blank"
-                            href={`https://mumbai.polygonscan.com/tx/${txHash}`}
-                        >
-                            See Transaction
-                        </a>
-                    </>
-                )}
-            </div>
-            {txValue && <p>value: {JSON.stringify(txValue)}</p>}
         </div>
     );
 }

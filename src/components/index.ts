@@ -1,6 +1,7 @@
 import BaseParticleMass from './BaseParticleMass';
 import BreakCovalentBond from './BreakCovalentBond';
 import CovalentBond from './CovalentBond';
+import CreateBasicProton from './CreateBasicProton';
 import CreatorOf from './CreatorOf';
 import CurrentParticleCharge from './CurrentParticleCharge';
 import CurrentParticleCovalentBonds from './CurrentParticleCovalentBonds';
@@ -13,6 +14,7 @@ export {
     BaseParticleMass,
     BreakCovalentBond,
     CovalentBond,
+    CreateBasicProton,
     CreatorOf,
     CurrentParticleCharge,
     CurrentParticleCovalentBonds,
